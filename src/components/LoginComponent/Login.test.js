@@ -6,10 +6,15 @@ jest.mock("axios", () => ({
 
   default: {
     get: () => ({
-      data: { id: 1, name: "John" },
+      data: {
+        name: "John", 
+        username: "Cookie"
+      },
     }),
   },
 }));
+
+
 
 describe("Login", () => {
   test("username input should be rendered", () => {
@@ -131,7 +136,7 @@ describe("Login", () => {
   test("user should be rendered after fetching", async () => {
     render(<Login />);
     const buttonEl = screen.getByRole("button");
-    const usernameInputEl = screen.getByPlaceholderText(/username/i);
+    const usernameInputEl = screen.getByPlaceholderText("username");
     const passwordInputEl = screen.getByPlaceholderText(/password/i);
 
     const testValue = "test";
@@ -140,7 +145,9 @@ describe("Login", () => {
     fireEvent.change(passwordInputEl, { target: { value: testValue } });
     fireEvent.click(buttonEl);
 
+    // czekamy aż nasze dane się załadują "Leanne Graham"
     await waitFor(() => {
+      // czekamy dodatkową 1 s aby nasz program mógł znaleźć odpowiednie dane
       setTimeout(() => {
         const userItem = screen.getByText("John");
         expect(userItem).toBeInTheDocument();
